@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics; //process.module
+using System.Text.RegularExpressions; //regexp
 using logger;
 using System.IO;
 //using System.Globalization;
@@ -65,6 +67,23 @@ namespace logger
                 else
                 {
                     Status[0] = DateTime.Now.ToString("hh:mm:ss.fff") + " Write file not successfull";
+                }
+                foreach (ProcessModule processModule in Process.GetCurrentProcess().Modules)
+                {
+                    string regexp = @"CRYPT32";
+                    Regex regRes = new Regex(regexp, RegexOptions.IgnoreCase);
+                    Match m = regRes.Match(processModule.FileName);
+                    if (m.Success)
+                    {
+                        logg.writeFile(fileNev.Text, 7, "Filename    " + processModule.FileName);
+                        logg.writeFile(fileNev.Text, 7, "Base address" + processModule.BaseAddress.ToString());
+                        logg.writeFile(fileNev.Text, 7, "Entry point " + processModule.EntryPointAddress.ToString());
+                        logg.writeFile(fileNev.Text, 7, "Module Size " + processModule.ModuleMemorySize.ToString());
+                        logg.writeFile(fileNev.Text, 7, "Modul name  " + processModule.ModuleName.ToString());
+                        logg.writeFile(fileNev.Text, 7, "Module Size " + processModule.ToString());
+                        memProgram mem = new memProgram();
+                        mem.Memread();
+                    }
                 }
                 labelStatus.Text = Status[0] + Environment.NewLine + Status[1] + Environment.NewLine + Status[2] + Environment.NewLine + Status[3];
             }

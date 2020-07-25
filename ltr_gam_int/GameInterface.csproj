@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: C:\Users\ezsovin\Documents\The Lord of the Rings Online\pwnagebot.old2\GameInterface.dll-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D780DF5-EFE8-475F-8825-C393895AA39D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>GameInterface</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>pwnagebot.GameInterface</RootNamespace>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="PowerCollections">
+      <HintPath>lib\PowerCollections.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandCompletedEventHandler.cs" />
+    <Compile Include="OffsetServer.cs" />
+    <Compile Include="CommandCompletedEventArgs.cs" />
+    <Compile Include="DotfuscatorAttribute.cs" />
+    <Compile Include="Interface.cs" />
+    <Compile Include="Movement.cs" />
+    <Compile Include="EntityManager.cs" />
+    <Compile Include="Pointers.cs" />
+    <Compile Include="Fishing.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Offset\Offsets.cs" />
+    <Compile Include="Offset\a.cs" />
+    <Compile Include="Navigation\Region.cs" />
+    <Compile Include="Navigation\Universe.cs" />
+    <Compile Include="Navigation\Point.cs" />
+    <Compile Include="Navigation\Pathfinder.cs" />
+    <Compile Include="Navigation\MapperDebug.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Navigation\Rect.cs" />
+    <Compile Include="Navigation\Nav.cs" />
+    <Compile Include="Navigation\Connection.cs" />
+    <Compile Include="Navigation\AStar.cs" />
+    <Compile Include="Navigation\Mapper.cs" />
+    <Compile Include="Frameworks\SerializationTester.cs" />
+    <Compile Include="Frameworks\EventArgs`1.cs" />
+    <Compile Include="Frameworks\c.cs" />
+    <Compile Include="Frameworks\IInteractable.cs" />
+    <Compile Include="Frameworks\Singleton`1.cs" />
+    <Compile Include="Frameworks\a.cs" />
+    <Compile Include="Frameworks\b.cs" />
+    <Compile Include="Frameworks\MemoryReader.cs" />
+    <Compile Include="Frameworks\StringEnum.cs" />
+    <Compile Include="Frameworks\Logging\Logger.cs" />
+    <Compile Include="Frameworks\Logging\FileLog.cs" />
+    <Compile Include="Radar\RadarBase.cs" />
+    <Compile Include="Radar\RadarNpc.cs" />
+    <Compile Include="Radar\RadarNode.cs" />
+    <Compile Include="Radar\RadarControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Radar\RadarPlayer.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Navigation\MapperDebug.resx" />
+    <EmbeddedResource Include="Radar\RadarControl.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
