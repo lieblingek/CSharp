@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.connectButton = new System.Windows.Forms.Button();
             this.terminalBox = new System.Windows.Forms.TextBox();
             this.sendData1 = new System.Windows.Forms.Button();
@@ -39,13 +42,22 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ClearBtn = new System.Windows.Forms.Button();
             this.Send_time = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // connectButton
             // 
             this.connectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.connectButton.Location = new System.Drawing.Point(97, 420);
+            this.connectButton.Location = new System.Drawing.Point(90, 292);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(75, 23);
             this.connectButton.TabIndex = 0;
@@ -58,22 +70,22 @@
             this.terminalBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.terminalBox.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.terminalBox.BackColor = System.Drawing.Color.AliceBlue;
             this.terminalBox.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.terminalBox.Location = new System.Drawing.Point(20, 61);
+            this.terminalBox.Location = new System.Drawing.Point(6, 19);
             this.terminalBox.MinimumSize = new System.Drawing.Size(170, 172);
             this.terminalBox.Multiline = true;
             this.terminalBox.Name = "terminalBox";
             this.terminalBox.ReadOnly = true;
             this.terminalBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.terminalBox.Size = new System.Drawing.Size(452, 306);
+            this.terminalBox.Size = new System.Drawing.Size(295, 267);
             this.terminalBox.TabIndex = 2;
             // 
             // sendData1
             // 
             this.sendData1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.sendData1.Enabled = false;
-            this.sendData1.Location = new System.Drawing.Point(18, 419);
+            this.sendData1.Location = new System.Drawing.Point(6, 292);
             this.sendData1.Name = "sendData1";
             this.sendData1.Size = new System.Drawing.Size(75, 23);
             this.sendData1.TabIndex = 5;
@@ -85,12 +97,12 @@
             // 
             this.sendTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.sendTextBox1.Location = new System.Drawing.Point(18, 373);
+            this.sendTextBox1.Location = new System.Drawing.Point(171, 292);
             this.sendTextBox1.MaxLength = 64;
-            this.sendTextBox1.MinimumSize = new System.Drawing.Size(250, 40);
+            this.sendTextBox1.MinimumSize = new System.Drawing.Size(50, 40);
             this.sendTextBox1.Multiline = true;
             this.sendTextBox1.Name = "sendTextBox1";
-            this.sendTextBox1.Size = new System.Drawing.Size(299, 40);
+            this.sendTextBox1.Size = new System.Drawing.Size(125, 40);
             this.sendTextBox1.TabIndex = 8;
             // 
             // statusStrip1
@@ -100,7 +112,7 @@
             this.statusStrip1.Location = new System.Drawing.Point(0, 507);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.ShowItemToolTips = true;
-            this.statusStrip1.Size = new System.Drawing.Size(508, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(766, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -128,7 +140,7 @@
             // ClearBtn
             // 
             this.ClearBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ClearBtn.Location = new System.Drawing.Point(18, 448);
+            this.ClearBtn.Location = new System.Drawing.Point(6, 321);
             this.ClearBtn.Name = "ClearBtn";
             this.ClearBtn.Size = new System.Drawing.Size(75, 23);
             this.ClearBtn.TabIndex = 13;
@@ -139,7 +151,7 @@
             // Send_time
             // 
             this.Send_time.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Send_time.Location = new System.Drawing.Point(97, 448);
+            this.Send_time.Location = new System.Drawing.Point(90, 321);
             this.Send_time.Name = "Send_time";
             this.Send_time.Size = new System.Drawing.Size(75, 23);
             this.Send_time.TabIndex = 14;
@@ -148,25 +160,96 @@
             this.Send_time.UseVisualStyleBackColor = true;
             this.Send_time.Click += new System.EventHandler(this.Send_time_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.Send_time);
+            this.groupBox1.Controls.Add(this.ClearBtn);
+            this.groupBox1.Controls.Add(this.connectButton);
+            this.groupBox1.Controls.Add(this.terminalBox);
+            this.groupBox1.Controls.Add(this.sendTextBox1);
+            this.groupBox1.Controls.Add(this.sendData1);
+            this.groupBox1.Location = new System.Drawing.Point(20, 32);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(307, 447);
+            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Basic communication";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 351);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(111, 78);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Help:\r\n1 - Toggle led\r\n2 - Get time from MCU\r\n3 - Set time (RTC)\r\n4 - SPI SD\r\n5 -" +
+    " ADC test";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.chart1);
+            this.groupBox2.Location = new System.Drawing.Point(341, 32);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(388, 446);
+            this.groupBox2.TabIndex = 16;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Oscilloscope";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(7, 406);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(90, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Start/Stop ADC";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(7, 20);
+            this.chart1.Name = "chart1";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(375, 300);
+            this.chart1.TabIndex = 0;
+            this.chart1.Text = "chart1";
+            // 
+            // timer2
+            // 
+            this.timer2.Enabled = true;
+            this.timer2.Interval = 1000;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(508, 529);
-            this.Controls.Add(this.Send_time);
-            this.Controls.Add(this.ClearBtn);
+            this.ClientSize = new System.Drawing.Size(766, 529);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.StatusLabel2);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.sendTextBox1);
-            this.Controls.Add(this.sendData1);
-            this.Controls.Add(this.terminalBox);
-            this.Controls.Add(this.connectButton);
             this.MinimumSize = new System.Drawing.Size(516, 556);
             this.Name = "Form1";
             this.Text = "STM32 usblib bulk terminal";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,6 +267,12 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button ClearBtn;
         private System.Windows.Forms.Button Send_time;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 

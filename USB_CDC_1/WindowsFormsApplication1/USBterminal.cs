@@ -59,6 +59,7 @@ namespace WindowsFormsApplication1
         int timer_done = 0;
         int connect_time = 0;
         bool commands_not_sent = true;
+        bool oscilloscope_function_on = false;
 
         static UsbDevice MyUsbDevice;
         static UsbDeviceFinder MyUsbFinder = new UsbDeviceFinder(1155, 0xC1B0);
@@ -71,15 +72,18 @@ namespace WindowsFormsApplication1
 
         byte[] readBuffer1;
         byte[] writeBuffer1;
+        double[] chart_os;
 
         volatile bool running = true;
         volatile bool device_connected = false;
+        string newLine = Environment.NewLine;
 
         public Form1()
         {
             InitializeComponent();
             readBuffer1 = new byte[numBytes];
             writeBuffer1 = new byte[numBytes];
+            chart_os = new double[8];
             System.Threading.Thread.Sleep(1000);
             StatusLabel2.Text = "Text1";
             System.Threading.Thread.Sleep(1000);
@@ -220,8 +224,17 @@ namespace WindowsFormsApplication1
                 terminalBox.AppendText(s[9].ToString());
                 terminalBox.AppendText(":");
                 terminalBox.AppendText(s[10].ToString());
+                terminalBox.AppendText(newLine);
             }
-            else {
+            else if (s[0] == 0xff && s[1] == 0xfe)
+            {
+                terminalBox.AppendText("ADC voltage: ");
+                double get_num = ((s[3] * 256) + s[2]);
+                double voltage = 3.3*(get_num / 4096);
+                terminalBox.AppendText(voltage.ToString() + newLine);
+            }
+            else
+            {
                 foreach (byte by in s)
                 {
                     if (by < 0x1b && by > 0x2f)
@@ -351,6 +364,22 @@ namespace WindowsFormsApplication1
             writer1.Transfer(writeBuffer1, 0, 12, 5000, out temp_int);
             terminalBox.AppendText(DateTime.Now.ToString("yyyy MM dd dddd HH mm ss"));
             terminalBox.AppendText("\n");
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            if (oscilloscope_function_on)
+            {
+                writeBuffer1[0] = 53;
+                int temp_int = 0;
+                writer1.Transfer(writeBuffer1, 0, 12, 5000, out temp_int);
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            oscilloscope_function_on = !oscilloscope_function_on;
+            terminalBox.AppendText("Button pressed ... "+newLine);
         }
     }
 }
