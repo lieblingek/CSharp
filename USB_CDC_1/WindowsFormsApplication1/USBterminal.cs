@@ -54,7 +54,7 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
-        const int numBytes = 64;
+        const int numBytes = 512;
         volatile int numberOfDataRecieved;
         int timer_done = 0;
         int connect_time = 0;
@@ -83,7 +83,7 @@ namespace WindowsFormsApplication1
             InitializeComponent();
             readBuffer1 = new byte[numBytes];
             writeBuffer1 = new byte[numBytes];
-            chart_os = new double[8];
+            chart_os = new double[16];
             System.Threading.Thread.Sleep(1000);
             StatusLabel2.Text = "Text1";
             System.Threading.Thread.Sleep(1000);
@@ -231,6 +231,27 @@ namespace WindowsFormsApplication1
                 terminalBox.AppendText("ADC voltage: ");
                 double get_num = ((s[3] * 256) + s[2]);
                 double voltage = 3.3*(get_num / 4096);
+                terminalBox.AppendText(voltage.ToString() + " ");
+                get_num = ((s[5] * 256) + s[4]);
+                voltage = 3.3 * (get_num / 4096);
+                terminalBox.AppendText(voltage.ToString() + " ");
+                get_num = ((s[7] * 256) + s[6]);
+                voltage = 3.3 * (get_num / 4096);
+                terminalBox.AppendText(voltage.ToString() + " ");
+                get_num = ((s[9] * 256) + s[8]);
+                voltage = 3.3 * (get_num / 4096);
+                terminalBox.AppendText(voltage.ToString() + " ");
+                get_num = ((s[11] * 256) + s[10]);
+                voltage = 3.3 * (get_num / 4096);
+                terminalBox.AppendText(voltage.ToString() + " ");
+                get_num = ((s[13] * 256) + s[12]);
+                voltage = 3.3 * (get_num / 4096);
+                terminalBox.AppendText(voltage.ToString() + " ");
+                get_num = ((s[15] * 256) + s[14]);
+                voltage = 3.3 * (get_num / 4096);
+                terminalBox.AppendText(voltage.ToString() + " ");
+                get_num = ((s[17] * 256) + s[16]);
+                voltage = 3.3 * (get_num / 4096);
                 terminalBox.AppendText(voltage.ToString() + newLine);
             }
             else
