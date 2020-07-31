@@ -231,6 +231,7 @@ namespace WindowsFormsApplication1
                 terminalBox.AppendText("ADC voltage: ");
                 double get_num = ((s[3] * 256) + s[2]);
                 double voltage = 3.3*(get_num / 4096);
+                long count = ((((( s[33] * 256 ) + s[32] ) * 256 ) + s[31] ) * 256 ) + s[30] ;
                 terminalBox.AppendText(voltage.ToString() + " ");
                 get_num = ((s[5] * 256) + s[4]);
                 voltage = 3.3 * (get_num / 4096);
@@ -253,6 +254,7 @@ namespace WindowsFormsApplication1
                 get_num = ((s[17] * 256) + s[16]);
                 voltage = 3.3 * (get_num / 4096);
                 terminalBox.AppendText(voltage.ToString() + newLine);
+                terminalBox.AppendText("Number of samples: " + count.ToString() + newLine);
             }
             else
             {
