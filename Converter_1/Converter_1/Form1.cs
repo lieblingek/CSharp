@@ -43,14 +43,20 @@ namespace Converter_1
 			public string bizonylatszam;
 			public string datum;
 			public float brutto;
+			public float afa;
+			public int kov_szamla;
 		}
 
 		public string parsFile1(string textIn) {
-			ceg[] ceglista = new ceg[50];
-			szamla_tetelek[,] szamla_tetel = new szamla_tetelek[50,70];
-			szamla_ossz[,] szamla_osszegzo = new szamla_ossz[50,20];
+			int max_ceg_szam = 100;
+			int max_tetel_szam = 100;
+			int max_szama_szam = 30;
+			ceg[] ceglista = new ceg[max_ceg_szam];
+			szamla_tetelek[,] szamla_tetel = new szamla_tetelek[max_ceg_szam, max_tetel_szam];
+			szamla_ossz[,] szamla_osszegzo = new szamla_ossz[max_ceg_szam, max_szama_szam];
 			int kov_ceg_sorsz = 0;
 			int ceg_most;
+			int szamla_most;
 			int kov_tetel_sorszam = 0;
 			string retstr = "Add text" + textIn;
 			// file ból tábala, [1] a fő tábla
@@ -99,10 +105,14 @@ namespace Converter_1
 						string[] strarr4 = st2.Split(new[] { "041A93\">" }, StringSplitOptions.None);
 						if (strarr4.Length > 1)
 						{
+							strarr4[1].Replace(",", ".");
 							line.Add(strarr4[1]);
 						}
 					}
 					string[] adatb = line.ToArray();
+					adatb[5].Replace(",", ".").Replace("0", "9");
+					adatb[7].Replace(",", ".").Replace("0", "9");
+					adatb[8].Replace(",", ".").Replace("0", "9");
 					string tests = "Adat0: " + adatb[0] + " Adat1: " + adatb[1] + " Adat2: " + adatb[2] + " Adat3: " + adatb[3] + " Adat4: " + adatb[4] + " Adat5: " + adatb[5];
 					tests += " Adat6: " + adatb[6] + " Adat7: " + adatb[7] + " Adat8: " + adatb[8];
 					if (kov_ceg_sorsz == 0)
@@ -112,7 +122,7 @@ namespace Converter_1
 						ceglista[0].kov_ceg = 0;
 						szamla_tetel[0, 0].bizonylatszam = adatb[1];
 						szamla_tetel[0, 0].datum = adatb[0];
-						szamla_tetel[0, 0].netto = float.Parse(adatb[5], CultureInfo.InvariantCulture.NumberFormat);
+						szamla_tetel[0, 0].netto = float.Parse(adatb[5], CultureInfo.InvariantCulture);
 						szamla_tetel[0, 0].afa_szaz = adatb[6];
 						szamla_tetel[0, 0].afa = float.Parse(adatb[7], CultureInfo.InvariantCulture.NumberFormat);
 						szamla_tetel[0, 0].brutto = float.Parse(adatb[8], CultureInfo.InvariantCulture.NumberFormat);
@@ -122,16 +132,16 @@ namespace Converter_1
 					}
 					else 
 					{
-						ceg_most = 51;
+						ceg_most = max_ceg_szam + 1;
 						for (int i = 0; i < kov_ceg_sorsz + 2; i++) 
 						{
 							if (ceglista[i].cegnev == adatb[2]) 
 							{
 								ceg_most = i;
-								i = 51;
+								i = max_ceg_szam + 1;
 							}
 						}
-						if (ceg_most > 50)
+						if (ceg_most > max_ceg_szam)
 						{
 							ceglista[kov_ceg_sorsz].cegnev = adatb[2];
 							ceglista[kov_ceg_sorsz].adoszam = adatb[3];
@@ -150,12 +160,12 @@ namespace Converter_1
 						else
 						{
 							kov_tetel_sorszam = 0;
-							for (int i = 0; i < 50; i++) 
+							for (int i = 0; i < max_ceg_szam; i++) 
 							{
 								if (szamla_tetel[ceg_most, i].kov_szamla == 0) 
 								{
 									kov_tetel_sorszam = i + 1;
-									i = 51;
+									i = max_ceg_szam;
 								}
 							}
 							szamla_tetel[ceg_most, kov_tetel_sorszam].bizonylatszam = adatb[1];
@@ -171,20 +181,50 @@ namespace Converter_1
 					}
 				}
 			}
-			for (int i = 0; i < 51; i++) 
+			for (int i = 0; i < max_ceg_szam; i++) 
 			{
 				treeView1.Nodes[0].Nodes.Add(ceglista[i].cegnev + " + " + ceglista[i].adoszam + " + " + ceglista[i].kov_ceg + " ind: " + i);
-				for (int k = 0; k < 71; k++)
+				for (int k = 0; k < max_tetel_szam; k++)
 				{
-					treeView1.Nodes[0].Nodes[i].Nodes.Add("Biz: " + szamla_tetel[i, k].bizonylatszam + " date: " + szamla_tetel[i, k].datum + " netto: " + szamla_tetel[i, k].netto + " i: " + i + " k: " + k);
+					treeView1.Nodes[0].Nodes[i].Nodes.Add("Biz: " + szamla_tetel[i, k].bizonylatszam + " date: " + szamla_tetel[i, k].datum + " afa: " + szamla_tetel[i, k].afa + " netto: " + szamla_tetel[i, k].netto + " i: " + i + " k: " + k);
+					if (k == 0)
+					{
+						szamla_osszegzo[i, 0].bizonylatszam = szamla_tetel[i, k].bizonylatszam;
+						szamla_osszegzo[i, 0].brutto = szamla_tetel[i, k].brutto;
+						szamla_osszegzo[i, 0].datum = szamla_tetel[i, k].datum;
+						szamla_osszegzo[i, 0].afa = szamla_tetel[i, k].afa;
+						szamla_osszegzo[i, 0].kov_szamla = 0;
+					}
+					else
+					{
+						for (int j = 0; j < max_szama_szam; j++)
+						{
+							if (szamla_osszegzo[i, j].bizonylatszam == szamla_tetel[i, k].bizonylatszam)
+							{
+								szamla_osszegzo[i, j].brutto += szamla_tetel[i, k].brutto;
+								szamla_osszegzo[i, j].afa += szamla_tetel[i, k].afa;
+								j = max_szama_szam;
+							}
+							else if (szamla_osszegzo[i, j].kov_szamla == 0 )
+							{
+								szamla_osszegzo[i, j + 1].bizonylatszam = szamla_tetel[i, k].bizonylatszam;
+								szamla_osszegzo[i, j + 1].brutto = szamla_tetel[i, k].brutto;
+								szamla_osszegzo[i, j + 1].datum = szamla_tetel[i, k].datum;
+								szamla_osszegzo[i, j + 1].afa = szamla_tetel[i, k].afa;
+								szamla_osszegzo[i, j + 1].kov_szamla = 0;
+								szamla_osszegzo[i, j].kov_szamla = 1;
+								j = max_szama_szam;
+							}
+						}
+					}
 					if (szamla_tetel[i, k].kov_szamla == 0)
 					{
-						k = 72;
+						k = max_tetel_szam;
 					}
 				}
 				if (ceglista[i].kov_ceg == 0)
 				{
-					i = 52;
+					i = max_ceg_szam;
 				}
 			}
 			treeView1.EndUpdate();
