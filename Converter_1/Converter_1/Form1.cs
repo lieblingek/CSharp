@@ -22,7 +22,7 @@ namespace Converter_1
 		{
 			InitializeComponent();
 		}
-		
+
 		public struct Alap_adatok
 		{
 			public string Nyotat_azon;
@@ -30,16 +30,14 @@ namespace Converter_1
 			public string Adoszam;
 			public string ido_tol;
 			public string ido_ig;
-			public string[] Alnyomtatvany;
-			public string[] Partnerceg;
-			public string[] Partnet_adosz;
-			public int[] Van_kov_partner;
 		}
 		public struct Ceg
 		{
 			public string cegnev;
 			public int kov_ceg;
 			public string adoszam;
+			public int ceg_szama;
+			public int van_meg;
 		}
 		public struct Szamla_tetelek
 		{
@@ -68,8 +66,11 @@ namespace Converter_1
 		public Ceg[] ceglista = new Ceg[100];
 		public Szamla_ossz[,] szamla_osszegzo = new Szamla_ossz[100, 30];
 		public Alap_adatok alap_Adatok = new Alap_adatok();
+		public int[,] Selector = new int[100, 30];
+		public int max_checkbox;
 
-		public string ParsFile1(string textIn) {
+		public string ParsFile1(string textIn)
+		{
 			Szamla_tetelek[,] szamla_tetel = new Szamla_tetelek[max_ceg_szam, max_tetel_szam];
 			int kov_ceg_sorsz = 0;
 			int ceg_most;
@@ -77,7 +78,7 @@ namespace Converter_1
 			string[] strarr = textIn.Split(new[] { "table" }, StringSplitOptions.None);
 			// táblából különböző áfakulcsok
 			string[] strarr2 = strarr[1].Split(new[] { "</tr>" }, StringSplitOptions.None);
-			
+
 
 			treeView1.BeginUpdate();
 
@@ -123,12 +124,12 @@ namespace Converter_1
 						szamla_tetel[0, 0].kov_szamla = 0;
 						kov_ceg_sorsz++;
 					}
-					else 
+					else
 					{
 						ceg_most = max_ceg_szam + 1;
-						for (int i = 0; i < kov_ceg_sorsz + 2; i++) 
+						for (int i = 0; i < kov_ceg_sorsz + 2; i++)
 						{
-							if (ceglista[i].cegnev == adatb[2]) 
+							if (ceglista[i].cegnev == adatb[2])
 							{
 								ceg_most = i;
 								i = max_ceg_szam + 1;
@@ -153,9 +154,9 @@ namespace Converter_1
 						else
 						{
 							int kov_tetel_sorszam = 0;
-							for (int i = 0; i < max_ceg_szam; i++) 
+							for (int i = 0; i < max_ceg_szam; i++)
 							{
-								if (szamla_tetel[ceg_most, i].kov_szamla == 0) 
+								if (szamla_tetel[ceg_most, i].kov_szamla == 0)
 								{
 									kov_tetel_sorszam = i + 1;
 									i = max_ceg_szam;
@@ -174,7 +175,7 @@ namespace Converter_1
 					}
 				}
 			}
-			for (int i = 0; i < max_ceg_szam; i++) 
+			for (int i = 0; i < max_ceg_szam; i++)
 			{
 				treeView1.Nodes[0].Nodes.Add(ceglista[i].cegnev + " + " + ceglista[i].adoszam + " + " + ceglista[i].kov_ceg + " ind: " + i);
 				for (int k = 0; k < max_tetel_szam; k++)
@@ -198,7 +199,7 @@ namespace Converter_1
 								szamla_osszegzo[i, j].afa += szamla_tetel[i, k].afa;
 								j = max_szama_szam;
 							}
-							else if (szamla_osszegzo[i, j].kov_szamla == 0 )
+							else if (szamla_osszegzo[i, j].kov_szamla == 0)
 							{
 								szamla_osszegzo[i, j + 1].bizonylatszam = szamla_tetel[i, k].bizonylatszam;
 								szamla_osszegzo[i, j + 1].brutto = szamla_tetel[i, k].brutto;
@@ -222,6 +223,9 @@ namespace Converter_1
 			}
 			for (int i = 0; i < max_ceg_szam; i++)
 			{
+				ceglista[i].ceg_szama = checkedListBox1.Items.Count;
+				Selector[i, 0] = checkedListBox1.Items.Count;
+				int j = 1;
 				checkedListBox1.Items.Add(ceglista[i].cegnev + " Adószám: " + ceglista[i].adoszam);
 				treeView1.Nodes[1].Nodes.Add(ceglista[i].cegnev + " + " + ceglista[i].adoszam + " + " + ceglista[i].kov_ceg + " ind: " + i);
 				for (int k = 0; k < max_tetel_szam; k++)
@@ -229,7 +233,9 @@ namespace Converter_1
 					szamla_osszegzo[i, k].brutto_kerek = Math.Round(szamla_osszegzo[i, k].brutto / 1000);
 					szamla_osszegzo[i, k].afa_kerek = Math.Round(szamla_osszegzo[i, k].afa / 1000);
 					treeView1.Nodes[1].Nodes[i].Nodes.Add("Biz: " + szamla_osszegzo[i, k].bizonylatszam + " date: " + szamla_osszegzo[i, k].datum + " afa: " + szamla_osszegzo[i, k].afa + " brutto: " + szamla_osszegzo[i, k].brutto + " brutto kerek: " + szamla_osszegzo[i, k].brutto_kerek + " afa kerek: " + szamla_osszegzo[i, k].afa_kerek);
-					checkedListBox1.Items.Add("  Bizonylatsz.:" + szamla_osszegzo[i, k].bizonylatszam + " Dátum: " + szamla_osszegzo[i, k].datum + " Brutto: " + szamla_osszegzo[i, k].brutto_kerek + " Áfa: " + szamla_osszegzo[i, k].afa_kerek);
+					Selector[i, j] = checkedListBox1.Items.Count;
+					j++;
+					checkedListBox1.Items.Add("     Bizonylatsz.:" + szamla_osszegzo[i, k].bizonylatszam + " Dátum: " + szamla_osszegzo[i, k].datum + " Brutto: " + szamla_osszegzo[i, k].brutto_kerek + " Áfa: " + szamla_osszegzo[i, k].afa_kerek);
 					if (szamla_osszegzo[i, k].kov_szamla == 0)
 					{
 						k = max_tetel_szam;
@@ -248,9 +254,10 @@ namespace Converter_1
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.Title = "Számlák file megnyitása";
 			ofd.Filter = "HTML file|*.htm|All file|*.*";
-			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
+			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
-				if ((ofd.OpenFile()) != null) {
+				if ((ofd.OpenFile()) != null)
+				{
 					string strFileName = ofd.FileName;
 					string file1text = File.ReadAllText(strFileName, Encoding.Default);
 					// Comment 1
@@ -283,21 +290,23 @@ namespace Converter_1
 
 			}
 			for (int i = 3; i < 55; i++)
-			{ 
-	    		if (xDoc.ChildNodes[1].ChildNodes[i] != null)
-	    		{
+			{
+				if (xDoc.ChildNodes[1].ChildNodes[i] != null)
+				{
 					richTextBox1.Text += "Alnyomtatvány: " + xDoc.ChildNodes[1].ChildNodes[i].ChildNodes[0].ChildNodes[0].InnerText + "\n";
 					richTextBox1.Text += "Partnercég: " + xDoc.ChildNodes[1].ChildNodes[i].ChildNodes[0].ChildNodes[3].ChildNodes[0].InnerText + "\n";
 					richTextBox1.Text += "Partner adószám: " + xDoc.ChildNodes[1].ChildNodes[i].ChildNodes[0].ChildNodes[3].ChildNodes[1].InnerText + "\n\n";
-    			}
+				}
 			}
 			string ret = textIn2 + "alma";
 			checkedListBox1.Enabled = true;
+			button3.Enabled = true;
+			button2.Enabled = true;
 			return ret;
 		}
 
 		private void Load_file2_Click(object sender, EventArgs e)
-        {
+		{
 			OpenFileDialog ofd2 = new OpenFileDialog();
 			ofd2.Title = "ÁNYK file megnyitása";
 			ofd2.Filter = "XML file|*.xml|All file|*.*";
@@ -308,6 +317,47 @@ namespace Converter_1
 					string strFileName2 = ofd2.FileName;
 					ParsFile2(strFileName2);
 				}
+			}
+		}
+
+		private void Timer1_Tick(object sender, EventArgs e)
+		{
+			if (checkedListBox1.Enabled == true)
+			{
+				for (int i = 0; i < max_ceg_szam; i++)
+				{
+					if (checkedListBox1.GetItemCheckState(ceglista[i].ceg_szama) == CheckState.Checked)
+					{
+						for (int k = 1; k < 100; k++)
+						{
+							checkedListBox1.SetItemCheckState(Selector[i, k], CheckState.Checked);
+							if (Selector[i, k + 1] == 0)
+							{
+								k = 100;
+							}
+						}
+					}
+					if (ceglista[i].kov_ceg == 0)
+					{
+						i = max_ceg_szam;
+					}
+				}
+			}
+		}
+
+		private void Button2_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < checkedListBox1.Items.Count; i++)
+			{
+				checkedListBox1.SetItemCheckState(i, CheckState.Unchecked);
+			}
+		}
+
+		private void Button3_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < checkedListBox1.Items.Count; i++)
+			{
+				checkedListBox1.SetItemCheckState(i, CheckState.Checked);
 			}
 		}
 	}
