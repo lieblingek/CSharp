@@ -11,6 +11,8 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography.X509Certificates;
 using System.Globalization;
+using System.Xml;
+using static System.Xml.XmlDocument;
 
 namespace Converter_1
 {
@@ -20,7 +22,19 @@ namespace Converter_1
 		{
 			InitializeComponent();
 		}
-
+		
+		public struct Alap_adatok
+		{
+			public string Nyotat_azon;
+			public string Cegnev;
+			public string Adoszam;
+			public string ido_tol;
+			public string ido_ig;
+			public string[] Alnyomtatvany;
+			public string[] Partnerceg;
+			public string[] Partnet_adosz;
+			public int[] Van_kov_partner;
+		}
 		public struct Ceg
 		{
 			public string cegnev;
@@ -48,14 +62,15 @@ namespace Converter_1
 			public double afa_kerek;
 			public int kov_szamla;
 		}
+		public int max_ceg_szam = 100;
+		public int max_tetel_szam = 100;
+		public int max_szama_szam = 30;
+		public Ceg[] ceglista = new Ceg[100];
+		public Szamla_ossz[,] szamla_osszegzo = new Szamla_ossz[100, 30];
+		public Alap_adatok alap_Adatok = new Alap_adatok();
 
 		public string ParsFile1(string textIn) {
-			int max_ceg_szam = 100;
-			int max_tetel_szam = 100;
-			int max_szama_szam = 30;
-			Ceg[] ceglista = new Ceg[max_ceg_szam];
 			Szamla_tetelek[,] szamla_tetel = new Szamla_tetelek[max_ceg_szam, max_tetel_szam];
-			Szamla_ossz[,] szamla_osszegzo = new Szamla_ossz[max_ceg_szam, max_szama_szam];
 			int kov_ceg_sorsz = 0;
 			int ceg_most;
 			// file ból tábala, [1] a fő tábla
@@ -78,17 +93,6 @@ namespace Converter_1
 				{
 					line.Clear();
 					string[] strarr3 = st.Split(new[] { "</font>" }, StringSplitOptions.None);
-					// st2 -  0 -  - üres
-					// st2 -0 1 - 2 - dátum
-					// st2 -1 2 - 4 - Bizonylatszám
-					// st2 -2 3 - 6 - Cégnév
-					// st2 -3 4 - 8 - Adószám
-					// st2 -4 5 - 10 - +
-					// st2 -5 6 - 12 - Áfa alap
-					// st2 -6 7 - 14 - Áfa %
-					// st2 -7 8 - 16 - Áfa összeg
-					// st2 -8 9 - 18 - Bruttó
-					// string [,,] adatb; cégnév+adószám   Biozonylatszám+Dátum   ÁfaAlap+Áfa%+Áfa+Bruttó
 					foreach (string st2 in strarr3)
 					{
 						string[] strarr4 = st2.Split(new[] { "041A93\">" }, StringSplitOptions.None);
@@ -218,12 +222,14 @@ namespace Converter_1
 			}
 			for (int i = 0; i < max_ceg_szam; i++)
 			{
+				checkedListBox1.Items.Add(ceglista[i].cegnev + " Adószám: " + ceglista[i].adoszam);
 				treeView1.Nodes[1].Nodes.Add(ceglista[i].cegnev + " + " + ceglista[i].adoszam + " + " + ceglista[i].kov_ceg + " ind: " + i);
 				for (int k = 0; k < max_tetel_szam; k++)
 				{
 					szamla_osszegzo[i, k].brutto_kerek = Math.Round(szamla_osszegzo[i, k].brutto / 1000);
 					szamla_osszegzo[i, k].afa_kerek = Math.Round(szamla_osszegzo[i, k].afa / 1000);
 					treeView1.Nodes[1].Nodes[i].Nodes.Add("Biz: " + szamla_osszegzo[i, k].bizonylatszam + " date: " + szamla_osszegzo[i, k].datum + " afa: " + szamla_osszegzo[i, k].afa + " brutto: " + szamla_osszegzo[i, k].brutto + " brutto kerek: " + szamla_osszegzo[i, k].brutto_kerek + " afa kerek: " + szamla_osszegzo[i, k].afa_kerek);
+					checkedListBox1.Items.Add("  Bizonylatsz.:" + szamla_osszegzo[i, k].bizonylatszam + " Dátum: " + szamla_osszegzo[i, k].datum + " Brutto: " + szamla_osszegzo[i, k].brutto_kerek + " Áfa: " + szamla_osszegzo[i, k].afa_kerek);
 					if (szamla_osszegzo[i, k].kov_szamla == 0)
 					{
 						k = max_tetel_szam;
@@ -250,6 +256,57 @@ namespace Converter_1
 					// Comment 1
 					ParsFile1(file1text);
 					//richTextBox1.Text = ParsFile1(file1text);
+				}
+			}
+		}
+
+		public string ParsFile2(string textIn2)
+		{
+			XmlDocument xDoc = new XmlDocument();
+			xDoc.Load(textIn2);
+			richTextBox1.Text = "XML-ből kiolvasott adatok:\n";
+			alap_Adatok.Nyotat_azon = xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[0].ChildNodes[0].InnerText;
+			richTextBox1.Text += "Fő nyomtatvány azonosító: " + alap_Adatok.Nyotat_azon + "\n";
+			alap_Adatok.Cegnev = xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[0].ChildNodes[2].ChildNodes[0].InnerText;
+			richTextBox1.Text += "Cégnév: " + alap_Adatok.Cegnev + "\n";
+			alap_Adatok.Adoszam = xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[0].ChildNodes[2].ChildNodes[1].InnerText;
+			richTextBox1.Text += "Adószám: " + alap_Adatok.Adoszam + "\n";
+			alap_Adatok.ido_tol = xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[0].ChildNodes[3].ChildNodes[0].InnerText;
+			richTextBox1.Text += "Ídőszak kezdetete: " + alap_Adatok.ido_tol + "\n";
+			alap_Adatok.ido_ig = xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[0].ChildNodes[3].ChildNodes[1].InnerText;
+			richTextBox1.Text += "Ídőszak vége: " + alap_Adatok.ido_ig + "\n\n";
+			if (xDoc.ChildNodes[1].ChildNodes[2] != null)
+			{
+				richTextBox1.Text += "Alnyomtatvány: " + xDoc.ChildNodes[1].ChildNodes[2].ChildNodes[0].ChildNodes[0].InnerText + "\n";
+				richTextBox1.Text += "Partnercég: " + xDoc.ChildNodes[1].ChildNodes[2].ChildNodes[0].ChildNodes[3].ChildNodes[0].InnerText + "\n";
+				richTextBox1.Text += "Partner adószám: " + xDoc.ChildNodes[1].ChildNodes[2].ChildNodes[0].ChildNodes[3].ChildNodes[1].InnerText + "\n\n";
+
+			}
+			for (int i = 3; i < 55; i++)
+			{ 
+	    		if (xDoc.ChildNodes[1].ChildNodes[i] != null)
+	    		{
+					richTextBox1.Text += "Alnyomtatvány: " + xDoc.ChildNodes[1].ChildNodes[i].ChildNodes[0].ChildNodes[0].InnerText + "\n";
+					richTextBox1.Text += "Partnercég: " + xDoc.ChildNodes[1].ChildNodes[i].ChildNodes[0].ChildNodes[3].ChildNodes[0].InnerText + "\n";
+					richTextBox1.Text += "Partner adószám: " + xDoc.ChildNodes[1].ChildNodes[i].ChildNodes[0].ChildNodes[3].ChildNodes[1].InnerText + "\n\n";
+    			}
+			}
+			string ret = textIn2 + "alma";
+			checkedListBox1.Enabled = true;
+			return ret;
+		}
+
+		private void Load_file2_Click(object sender, EventArgs e)
+        {
+			OpenFileDialog ofd2 = new OpenFileDialog();
+			ofd2.Title = "ÁNYK file megnyitása";
+			ofd2.Filter = "XML file|*.xml|All file|*.*";
+			if (ofd2.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				if ((ofd2.OpenFile()) != null)
+				{
+					string strFileName2 = ofd2.FileName;
+					ParsFile2(strFileName2);
 				}
 			}
 		}
