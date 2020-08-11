@@ -60,6 +60,8 @@ namespace WindowsFormsApplication1
         int connect_time = 0;
         bool commands_not_sent = true;
         bool oscilloscope_function_on = false;
+        uint rec_count = 0;
+        uint rec_count2 = 0;
 
         static UsbDevice MyUsbDevice;
         static UsbDeviceFinder MyUsbFinder = new UsbDeviceFinder(1155, 0xC1B0);
@@ -228,35 +230,43 @@ namespace WindowsFormsApplication1
             }
             else if (s[0] == 0xff && s[1] == 0xfe)
             {
-                terminalBox.AppendText("ADC voltage: ");
+                rec_count++;
+                //terminalBox.AppendText("ADC voltage: ");
                 //double get_num = ((s[3] * 256) + s[2]);
                 //double voltage = 3.3*(get_num / 4096);
-                long count = ((((( s[504] * 256 ) + s[503] ) * 256 ) + s[502] ) * 256 ) + s[501] ;
+                //long count = ((((( s[504] * 256 ) + s[503] ) * 256 ) + s[502] ) * 256 ) + s[501] ;
                 //terminalBox.AppendText(voltage.ToString() + " ");
                 //get_num = ((s[17] * 256) + s[16]);
                 //voltage = 3.3 * (get_num / 4096);
                 //terminalBox.AppendText(voltage.ToString() + newLine);
-                for (int i = 2; i <= 500; i++)
+                //for (int i = 2; i <= 500; i++)
+                //{
+                //    terminalBox.AppendText(String.Format(" 0x{0:X}", s[i]));
+                //}
+                if ((rec_count % 1000) == 3)
                 {
-                    terminalBox.AppendText(String.Format(" 0x{0:X}", s[i]));
+                    terminalBox.AppendText(DateTime.Now.ToString("yyyy MM dd dddd HH mm ss"));
+                    terminalBox.AppendText(newLine);
                 }
-                terminalBox.AppendText(newLine);
-                terminalBox.AppendText("Number of samples: " + count.ToString() + newLine);
+                //terminalBox.AppendText("Number of samples: " + count.ToString() + newLine);
             }
             else
             {
-                foreach (byte by in s)
-                {
-                    if (by < 0x1b && by > 0x2f)
-                    {
-                        terminalBox.AppendText(Convert.ToChar(by).ToString());
-                    }
-                    else
-                    {
-                        terminalBox.AppendText(" 0x");
-                        terminalBox.AppendText(String.Format("{0:X}", by));
-                    }
-                }
+                rec_count2 ++;
+                if ((rec_count2 % 1000) == 3)
+                    terminalBox.AppendText("No match ");
+                //foreach (byte by in s)
+                //{
+                //    if (by < 0x1b && by > 0x2f)
+                //    {
+                //        terminalBox.AppendText(Convert.ToChar(by).ToString());
+                //    }
+                //    else
+                //    {
+                //        terminalBox.AppendText(" 0x");
+                //        terminalBox.AppendText(String.Format("{0:X}", by));
+                //    }
+                //}
             }
             terminalBox.AppendText("\n");
         }
