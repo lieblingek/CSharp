@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            //System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.connectButton = new System.Windows.Forms.Button();
             this.terminalBox = new System.Windows.Forms.TextBox();
             this.sendData1 = new System.Windows.Forms.Button();
@@ -47,7 +47,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.splitter1 = new System.Windows.Forms.Splitter();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -56,7 +55,7 @@
             // connectButton
             // 
             this.connectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.connectButton.Location = new System.Drawing.Point(90, 292);
+            this.connectButton.Location = new System.Drawing.Point(90, 344);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(75, 23);
             this.connectButton.TabIndex = 0;
@@ -77,14 +76,14 @@
             this.terminalBox.Name = "terminalBox";
             this.terminalBox.ReadOnly = true;
             this.terminalBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.terminalBox.Size = new System.Drawing.Size(295, 267);
+            this.terminalBox.Size = new System.Drawing.Size(295, 319);
             this.terminalBox.TabIndex = 2;
             // 
             // sendData1
             // 
             this.sendData1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.sendData1.Enabled = false;
-            this.sendData1.Location = new System.Drawing.Point(6, 292);
+            this.sendData1.Location = new System.Drawing.Point(6, 344);
             this.sendData1.Name = "sendData1";
             this.sendData1.Size = new System.Drawing.Size(75, 23);
             this.sendData1.TabIndex = 5;
@@ -96,7 +95,7 @@
             // 
             this.sendTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.sendTextBox1.Location = new System.Drawing.Point(171, 292);
+            this.sendTextBox1.Location = new System.Drawing.Point(171, 344);
             this.sendTextBox1.MaxLength = 64;
             this.sendTextBox1.MinimumSize = new System.Drawing.Size(50, 40);
             this.sendTextBox1.Multiline = true;
@@ -108,10 +107,10 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 507);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 559);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.ShowItemToolTips = true;
-            this.statusStrip1.Size = new System.Drawing.Size(766, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1030, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -124,7 +123,7 @@
             // 
             this.StatusLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.StatusLabel2.AutoSize = true;
-            this.StatusLabel2.Location = new System.Drawing.Point(-3, 482);
+            this.StatusLabel2.Location = new System.Drawing.Point(-3, 534);
             this.StatusLabel2.Name = "StatusLabel2";
             this.StatusLabel2.Size = new System.Drawing.Size(35, 13);
             this.StatusLabel2.TabIndex = 12;
@@ -139,7 +138,7 @@
             // ClearBtn
             // 
             this.ClearBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ClearBtn.Location = new System.Drawing.Point(6, 321);
+            this.ClearBtn.Location = new System.Drawing.Point(6, 373);
             this.ClearBtn.Name = "ClearBtn";
             this.ClearBtn.Size = new System.Drawing.Size(75, 23);
             this.ClearBtn.TabIndex = 13;
@@ -150,7 +149,7 @@
             // Send_time
             // 
             this.Send_time.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Send_time.Location = new System.Drawing.Point(90, 321);
+            this.Send_time.Location = new System.Drawing.Point(90, 373);
             this.Send_time.Name = "Send_time";
             this.Send_time.Size = new System.Drawing.Size(75, 23);
             this.Send_time.TabIndex = 14;
@@ -172,7 +171,7 @@
             this.groupBox1.Controls.Add(this.sendData1);
             this.groupBox1.Location = new System.Drawing.Point(20, 32);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(307, 447);
+            this.groupBox1.Size = new System.Drawing.Size(307, 499);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Basic communication";
@@ -181,7 +180,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 351);
+            this.label1.Location = new System.Drawing.Point(7, 403);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(111, 78);
             this.label1.TabIndex = 15;
@@ -191,7 +190,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(427, 472);
+            this.button1.Location = new System.Drawing.Point(342, 524);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(90, 23);
             this.button1.TabIndex = 1;
@@ -209,13 +208,13 @@
             this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(361, 12);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(393, 449);
+            //series1.ChartArea = "ChartArea1";
+            //series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            //series1.Legend = "Legend1";
+            //series1.Name = "Series1";
+            //series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            //this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(657, 449);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             // 
@@ -225,23 +224,13 @@
             this.timer2.Interval = 1000;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // splitter1
-            // 
-            this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.splitter1.Location = new System.Drawing.Point(352, 0);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(414, 507);
-            this.splitter1.TabIndex = 17;
-            this.splitter1.TabStop = false;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(766, 529);
+            this.ClientSize = new System.Drawing.Size(1030, 581);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.chart1);
-            this.Controls.Add(this.splitter1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.StatusLabel2);
             this.Controls.Add(this.statusStrip1);
@@ -276,7 +265,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Timer timer2;
-        private System.Windows.Forms.Splitter splitter1;
     }
 }
 

@@ -74,7 +74,10 @@ namespace WindowsFormsApplication1
 
         byte[] readBuffer1;
         byte[] writeBuffer1;
+        byte[] reciveBuffer;
         double[] chart_os;
+        double[] chart_os2 = { 1,2,3,2,1,0,1,2 };
+        int reciveCounter;
 
         volatile bool running = true;
         volatile bool device_connected = false;
@@ -91,7 +94,35 @@ namespace WindowsFormsApplication1
             System.Threading.Thread.Sleep(1000);
             StatusLabel2.Text = "Text2";
             toolStripStatusLabel1.Text = "Waiting for device connection";
+
+
+
+            Random rnd = new Random();
+            //Chart chart1 = new Chart();
+            chart1.Series.Add("duck");
+            chart1.Series["duck"].Enabled = true;
+            chart1.Visible = true;
+
+
+            chart1.Series["duck"].ChartArea = "ChartArea1";
+            chart1.Series["duck"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            chart1.Series["duck"].Legend = "Legend1";
+            //chart1.Series["duck"].Name = "Series_d";
+
+
+            for (int q = 0; q < 100; q++)
+            {
+                int second = rnd.Next(0, 10);
+                chart1.Series["duck"].Points.AddXY(q, second);
+            }
+            chart1.Show();
+            Controls.Add(chart1);
+            chart1.Show();
+
+
         }
+
+
 
         private void init_Click(object sender, EventArgs e)
         {
@@ -208,8 +239,9 @@ namespace WindowsFormsApplication1
             }
         }
 
+        public void DoUpdate(object sender, System.EventArgs e) => reciveCounter += readBuffer1.Length;
 
-        public void DoUpdate(object sender, System.EventArgs e)
+        public void DoUpdate22(object sender, System.EventArgs e)
         {
             byte[] s = readBuffer1;
             if (s[0] == 0xff && s[1] == 0xff)
@@ -394,6 +426,7 @@ namespace WindowsFormsApplication1
                 int temp_int = 0;
                 writer1.Transfer(writeBuffer1, 0, 12, 5000, out temp_int);
             }
+            //terminalBox.AppendText(reciveCounter + newLine);
         }
 
         private void button1_Click_1(object sender, EventArgs e)
