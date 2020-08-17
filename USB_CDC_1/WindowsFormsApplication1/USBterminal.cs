@@ -74,10 +74,17 @@ namespace WindowsFormsApplication1
 
         byte[] readBuffer1;
         byte[] writeBuffer1;
-        byte[] reciveBuffer;
+        // 850*15*510 + 510 = 6503010
+        // 850*15*509 + 509 = 6489750+509 = 6490259
+        byte[] reciveBuffer = new byte[649029];
+        byte[] reciveBuffer2 = new byte[6490259];
         double[] chart_os;
         double[] chart_os2 = { 1,2,3,2,1,0,1,2 };
-        int reciveCounter;
+        int reciveCounter = 0;
+        int reciveCounter2 = 0;
+        int num_Of_buff = 0;
+        int num_Of_buff2 = 0;
+        int not_adc = 0;
 
         volatile bool running = true;
         volatile bool device_connected = false;
@@ -97,23 +104,23 @@ namespace WindowsFormsApplication1
 
 
 
-            Random rnd = new Random();
             //Chart chart1 = new Chart();
-            chart1.Series.Add("duck");
-            chart1.Series["duck"].Enabled = true;
+            chart1.Series.Add("ch1");
+            chart1.Series["ch1"].Enabled = true;
             chart1.Visible = true;
 
 
-            chart1.Series["duck"].ChartArea = "ChartArea1";
-            chart1.Series["duck"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            chart1.Series["duck"].Legend = "Legend1";
+            chart1.Series["ch1"].ChartArea = "ChartArea1";
+            chart1.Series["ch1"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            chart1.Series["ch1"].Legend = "Legend1";
             //chart1.Series["duck"].Name = "Series_d";
 
 
+            Random rnd = new Random();
             for (int q = 0; q < 100; q++)
             {
                 int second = rnd.Next(0, 10);
-                chart1.Series["duck"].Points.AddXY(q, second);
+                chart1.Series["ch1"].Points.AddXY(q, second);
             }
             chart1.Show();
             Controls.Add(chart1);
@@ -239,7 +246,37 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public void DoUpdate(object sender, System.EventArgs e) => reciveCounter += readBuffer1.Length;
+        public void DoUpdate(object sender, System.EventArgs e)
+        {
+            if (readBuffer1[1] == 0xfe)
+            {
+                System.Buffer.BlockCopy(readBuffer1, 2, reciveBuffer, reciveCounter, numBytes - 3);
+                if (reciveCounter >= 15*509*850)
+                {
+                    reciveCounter = 0;
+                    num_Of_buff = 0;
+                }
+                else
+                {
+                    num_Of_buff++;
+                    reciveCounter += numBytes - 3;
+                }
+            }
+            else
+            {
+                System.Buffer.BlockCopy(readBuffer1, 0, reciveBuffer2, reciveCounter2, numBytes);
+                if (reciveCounter2 >= 40 * 512)
+                {
+                    reciveCounter2 = 0;
+                    num_Of_buff2 = 0;
+                }
+                else
+                {
+                    num_Of_buff2++;
+                    reciveCounter2 += numBytes;
+                }
+            }
+        }
 
         public void DoUpdate22(object sender, System.EventArgs e)
         {
@@ -422,17 +459,46 @@ namespace WindowsFormsApplication1
         {
             if (oscilloscope_function_on)
             {
-                writeBuffer1[0] = 53;
-                int temp_int = 0;
-                writer1.Transfer(writeBuffer1, 0, 12, 5000, out temp_int);
+                //writeBuffer1[0] = 53;
+                //int temp_int = 0;
+                //writer1.Transfer(writeBuffer1, 0, 12, 5000, out temp_int);
+                terminalBox.AppendText("ADC: " + reciveCounter + " Not adc: " + num_Of_buff2 + newLine);
             }
-            //terminalBox.AppendText(reciveCounter + newLine);
+            chart1.Series.Clear();
+            chart1.Series.Add("ch1");
+            chart1.Series["ch1"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            int sec_drwaed = 10;
+            int number_of_samp_pro_sec = 408000;
+            int samples_pro_draw = 200;
+            int samp_pro_sec_draw = (int)number_of_samp_pro_sec / (samples_pro_draw/ sec_drwaed);
+            int draw_start_index = reciveCounter - 1;
+            double x = 0;
+            double y_now = 0;
+            double[] y = new double[samples_pro_draw];
+            for (int q = 0; q < samples_pro_draw; q++)
+            {
+                int inxed_now = draw_start_index - (samp_pro_sec_draw * q);
+                if (inxed_now < 0)
+                {
+                    inxed_now += 6490259;
+                }
+                y_now = reciveBuffer[inxed_now];
+                //x += 0.05;
+                x += (double)sec_drwaed/ samples_pro_draw;
+                y[q] = y_now;
+                chart1.Series["ch1"].Points.AddXY(x, y_now);
+            }
+            label2.Text = reciveCounter.ToString();
+            chart1.Refresh();
         }
-
+        
         private void button1_Click_1(object sender, EventArgs e)
         {
             oscilloscope_function_on = !oscilloscope_function_on;
             terminalBox.AppendText("Button pressed ... "+newLine);
+            writeBuffer1[0] = 54;
+            int temp_int = 0;
+            writer1.Transfer(writeBuffer1, 0, 12, 5000, out temp_int);
         }
     }
 }
