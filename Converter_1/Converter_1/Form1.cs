@@ -324,6 +324,7 @@ namespace Converter_1
 			{ 
 			    checkedListBox1.Enabled = true;
 			    button5.Enabled = true;
+			    button4.Enabled = true;
 			    button3.Enabled = true;
 			    button2.Enabled = true;
 			}
@@ -373,6 +374,7 @@ namespace Converter_1
 
 		private void Button2_Click(object sender, EventArgs e)
 		{
+			// Minden kijelölést megszüntet
 			for (int i = 0; i < checkedListBox1.Items.Count; i++)
 			{
 				checkedListBox1.SetItemCheckState(i, CheckState.Unchecked);
@@ -381,6 +383,7 @@ namespace Converter_1
 
 		private void Button3_Click(object sender, EventArgs e)
 		{
+			// Mindent kijelöl
 			for (int i = 0; i < checkedListBox1.Items.Count; i++)
 			{
 				checkedListBox1.SetItemCheckState(i, CheckState.Checked);
@@ -431,7 +434,7 @@ namespace Converter_1
 			}
 			for (int i = 0; i < max_ceg_szam; i++)
 			{
-				richTextBox1.Text += "Kijelölt cég: " + ceglista[kijelolt_ceg_lista[i]].cegnev + "\n\n";
+				//richTextBox1.Text += "Kijelölt cég: " + ceglista[kijelolt_ceg_lista[i]].cegnev + "\n\n";
 				XmlElement rootnode_ny = xDoc.CreateElement("nyomtatvany", xmlns);
 				xDoc.ChildNodes[1].AppendChild(rootnode_ny);
 				XmlElement rootnode_0 = xDoc.CreateElement("nyomtatvanyinformacio", xmlns);
@@ -651,6 +654,27 @@ namespace Converter_1
 			string new_file_name = m2.Groups[1].ToString();
 			new_file_name += "_new.xml";
 			xDoc.Save(new_file_name);
+		}
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+			// Magyart kijelöl
+			string strRegex4 = @"\d{8}-?\d-?\d{2}";
+			Regex re4 = new Regex(strRegex4);
+			
+			for (int i = 0; i < max_ceg_szam; i++)
+			{
+				Match m4 = re4.Match(ceglista[i].adoszam);
+				if (m4.Success)
+				{
+					checkedListBox1.SetItemCheckState(ceglista[i].ceg_szama, CheckState.Checked);
+					//richTextBox1.Text = "Selected: " + ceglista[i].adoszam + "\n";
+				}
+				if (ceglista[i].kov_ceg == 0)
+				{
+					i = max_ceg_szam;
+				}
+			}
 		}
 	}
 }
