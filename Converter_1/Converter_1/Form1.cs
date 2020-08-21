@@ -21,6 +21,11 @@ namespace Converter_1
 		public Form1()
 		{
 			InitializeComponent();
+			// Javítandó:
+			// Dupla katt kezelés
+			// kerekítés ellenörző
+			// sorrend ellenörzés
+			// adószám 8 számjegy
 		}
 
 		public struct Alap_adatok
@@ -94,10 +99,6 @@ namespace Converter_1
 			string[] strarr2 = strarr[1].Split(new[] { "</tr>" }, StringSplitOptions.None);
 
 
-			treeView1.BeginUpdate();
-
-			treeView1.Nodes.Add("File 1 adatok");
-			treeView1.Nodes.Add("File 1 adatok 2");
 			List<string> line = new List<string>();
 			foreach (string st in strarr2)
 			{
@@ -193,10 +194,8 @@ namespace Converter_1
 			}
 			for (int i = 0; i < max_ceg_szam; i++)
 			{
-				treeView1.Nodes[0].Nodes.Add(ceglista[i].cegnev + " + " + ceglista[i].adoszam + " + " + ceglista[i].kov_ceg + " ind: " + i);
 				for (int k = 0; k < max_tetel_szam; k++)
 				{
-					treeView1.Nodes[0].Nodes[i].Nodes.Add("Biz: " + szamla_tetel[i, k].bizonylatszam + " date: " + szamla_tetel[i, k].datum + " afa: " + szamla_tetel[i, k].afa + " netto: " + szamla_tetel[i, k].netto + " i: " + i + " k: " + k);
 					if (k == 0)
 					{
 						szamla_osszegzo[i, 0].bizonylatszam = szamla_tetel[i, k].bizonylatszam;
@@ -248,13 +247,11 @@ namespace Converter_1
 				Selector[i, 0] = checkedListBox1.Items.Count;
 				int j = 1;
 				checkedListBox1.Items.Add(ceglista[i].cegnev + " Adószám: " + ceglista[i].adoszam);
-				treeView1.Nodes[1].Nodes.Add(ceglista[i].cegnev + " + " + ceglista[i].adoszam + " + " + ceglista[i].kov_ceg + " ind: " + i);
 				for (int k = 0; k < max_tetel_szam; k++)
 				{
 					szamla_osszegzo[i, k].brutto_kerek = Math.Round(szamla_osszegzo[i, k].brutto / 1000);
 					szamla_osszegzo[i, k].netto_kerek = Math.Round(szamla_osszegzo[i, k].netto / 1000);
 					szamla_osszegzo[i, k].afa_kerek = Math.Round(szamla_osszegzo[i, k].afa / 1000);
-					treeView1.Nodes[1].Nodes[i].Nodes.Add("Biz: " + szamla_osszegzo[i, k].bizonylatszam + " date: " + szamla_osszegzo[i, k].datum + " afa: " + szamla_osszegzo[i, k].afa + " brutto: " + szamla_osszegzo[i, k].brutto + " brutto kerek: " + szamla_osszegzo[i, k].brutto_kerek + " afa kerek: " + szamla_osszegzo[i, k].afa_kerek);
 					Selector[i, j] = checkedListBox1.Items.Count;
 					j++;
 					checkedListBox1.Items.Add("     Bizonylatsz.:" + szamla_osszegzo[i, k].bizonylatszam + " Dátum: " + szamla_osszegzo[i, k].datum + " Brutto: " + szamla_osszegzo[i, k].brutto_kerek + " Áfa: " + szamla_osszegzo[i, k].afa_kerek);
@@ -268,7 +265,6 @@ namespace Converter_1
 					i = max_ceg_szam;
 				}
 			}
-			treeView1.EndUpdate();
 			return strarr2[0];
 		}
 		private void Load_Click(object sender, EventArgs e)
@@ -393,6 +389,7 @@ namespace Converter_1
         private void Button5_Click(object sender, EventArgs e)
         {
 			int last_index = 1;
+			int base_id = 0;
 			int ossz_kijelolt_ceg_szama = 0;
 			int[] kijelolt_ceg_lista = new int[max_ceg_szam];
 			string xmlns = "http://www.apeh.hu/abev/nyomtatvanyok/2005/01";
@@ -406,6 +403,13 @@ namespace Converter_1
 						last_index = i;
 					}
 			    }
+			}
+			for (int k = 40; k < 60; k++)
+			{
+				if (xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[k].Attributes["eazon"].Value == "0F0001D0105BA")
+				{
+					base_id = k;
+				}
 			}
 			for (int i = 0; i < max_ceg_szam; i++)
 			{
@@ -469,10 +473,11 @@ namespace Converter_1
 				XmlElement rootnode_0_4_1 = xDoc.CreateElement("ig", xmlns);
 				rootnode_0_4_1.InnerText = alap_Adatok.ido_ig;
 				rootnode_0_4.AppendChild(rootnode_0_4_1);
-				int tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[51].InnerText, CultureInfo.InvariantCulture.NumberFormat) + 1;
-				xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[51].InnerText = tmp.ToString();
-				tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[59].InnerText, CultureInfo.InvariantCulture.NumberFormat) + 1;
-				xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[59].InnerText = tmp.ToString();
+				// cég adarb az A-nyomtatvanyon
+				int tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id].InnerText, CultureInfo.InvariantCulture.NumberFormat) + 1;
+				xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id].InnerText = tmp.ToString();
+				tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+8].InnerText, CultureInfo.InvariantCulture.NumberFormat) + 1;
+				xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+8].InnerText = tmp.ToString();
 				XmlElement rootnode_1 = xDoc.CreateElement("mezok", xmlns);
 				rootnode_ny.AppendChild(rootnode_1);
 				XmlElement rootnode_1_0 = xDoc.CreateElement("mezo", xmlns);
@@ -576,18 +581,18 @@ namespace Converter_1
 						rootnode_1_6.InnerText = tmp.ToString();
 						tmp = int.Parse(rootnode_1_9.InnerText, CultureInfo.InvariantCulture.NumberFormat) + 1;
 						rootnode_1_9.InnerText = tmp.ToString();
-						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[52].InnerText, CultureInfo.InvariantCulture.NumberFormat) + 1;
-						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[52].InnerText = tmp.ToString();
-						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[60].InnerText, CultureInfo.InvariantCulture.NumberFormat) + 1;
-						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[60].InnerText = tmp.ToString();
-						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[53].InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].netto_kerek);
-						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[53].InnerText = tmp.ToString();
-						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[61].InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].netto_kerek);
-						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[61].InnerText = tmp.ToString();
-						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[54].InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].afa_kerek);
-						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[54].InnerText = tmp.ToString();
-						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[62].InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].afa_kerek);
-						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[62].InnerText = tmp.ToString();
+						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+1].InnerText, CultureInfo.InvariantCulture.NumberFormat) + 1;
+						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+1].InnerText = tmp.ToString();
+						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+9].InnerText, CultureInfo.InvariantCulture.NumberFormat) + 1;
+						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+9].InnerText = tmp.ToString();
+						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+2].InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].netto_kerek);
+						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+2].InnerText = tmp.ToString();
+						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+10].InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].netto_kerek);
+						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+10].InnerText = tmp.ToString();
+						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+3].InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].afa_kerek);
+						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+3].InnerText = tmp.ToString();
+						tmp = int.Parse(xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+11].InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].afa_kerek);
+						xDoc.ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[base_id+11].InnerText = tmp.ToString();
 						tmp = int.Parse(rootnode_1_7.InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].netto_kerek);
 						rootnode_1_7.InnerText = tmp.ToString();
 						tmp = int.Parse(rootnode_1_10.InnerText, CultureInfo.InvariantCulture.NumberFormat) + Convert.ToInt32(szamla_osszegzo[kijelolt_ceg_lista[i], k].netto_kerek);
@@ -659,7 +664,8 @@ namespace Converter_1
         private void button4_Click(object sender, EventArgs e)
         {
 			// Magyart kijelöl
-			string strRegex4 = @"\d{8}-?\d-?\d{2}";
+			//string strRegex4 = @"^\d{8}-?\d-?\d{2}";
+			string strRegex4 = @"(^\d{8}-?\d-?\d{2}$)|([hH][uU]\d{8})";
 			Regex re4 = new Regex(strRegex4);
 			
 			for (int i = 0; i < max_ceg_szam; i++)

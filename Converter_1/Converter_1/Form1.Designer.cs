@@ -30,7 +30,6 @@
 		{
             this.components = new System.ComponentModel.Container();
             this.load = new System.Windows.Forms.Button();
-            this.treeView1 = new System.Windows.Forms.TreeView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -56,17 +55,6 @@
             this.load.UseVisualStyleBackColor = true;
             this.load.Click += new System.EventHandler(this.Load_Click);
             // 
-            // treeView1
-            // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeView1.Location = new System.Drawing.Point(3, 0);
-            this.treeView1.MaximumSize = new System.Drawing.Size(1000, 153);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(694, 153);
-            this.treeView1.TabIndex = 3;
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -78,7 +66,6 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.checkedListBox1);
-            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
             // 
             // splitContainer1.Panel2
             // 
@@ -95,9 +82,9 @@
             this.checkedListBox1.CheckOnClick = true;
             this.checkedListBox1.Enabled = false;
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(3, 157);
+            this.checkedListBox1.Location = new System.Drawing.Point(3, 7);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(694, 439);
+            this.checkedListBox1.Size = new System.Drawing.Size(694, 589);
             this.checkedListBox1.TabIndex = 4;
             // 
             // richTextBox1
@@ -184,7 +171,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.load);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Converter verzió 1.0.1   2020.08.21";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -196,7 +183,6 @@
 		#endregion
 
 		private System.Windows.Forms.Button load;
-        private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.RichTextBox richTextBox1;
